@@ -1,36 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/api/weather_api.dart';
 import 'package:weather_app/icons/weather_icon.dart';
 import 'package:weather_app/icons/weather_icons_SVG.dart';
 import 'package:weather_app/utils/custom_text.dart';
+import 'package:intl/intl.dart';
 
 class HourForecastCard extends StatelessWidget {
-  final int hour;
-  const HourForecastCard({super.key, required this.hour});
+  final DateTime date;
+  final Hourly? hourlyData;
+  const HourForecastCard({
+    super.key,
+    required this.date,
+    required this.hourlyData,
+  });
 
   @override
   Widget build(BuildContext context) {
     var now = DateTime.now();
-    int current_hour = now.hour;
-    Color accent_color = Colors.black;
 
-    if (hour == current_hour) {
-      accent_color = Colors.blueAccent;
+    Color accentColor = Colors.black;
+
+    // format the date to iso8601 string format and remove unnecessary minutes
+    String formatedDate = DateFormat("yyyy-MM-dd'T'HH:00").format(date);
+
+    // get index of date in the database then search for temperature data at this index
+    int weatherIndex = hourlyData != null
+        ? hourlyData!.time.indexOf(formatedDate)
+        : 0;
+    int weatherCode = hourlyData != null
+        ? hourlyData!.weatherCode[weatherIndex]
+        : 0;
+
+    if (date.hour == now.hour) {
+      accentColor = Colors.blueAccent;
     }
     return Column(
       spacing: 10,
       children: [
         CustomText(
-          text: hour == current_hour
+          text: date.hour == now.hour
               ? "Teraz"
-              : "${(hour) < 10 ? "0" : ""}${(hour).toString()}:00",
-          color: accent_color,
+              : "${(date.hour) < 10 ? "0" : ""}${(date.hour).toString()}:00",
+          color: accentColor,
           fontSize: 12,
           fontWeight: FontWeight(400),
         ),
-        WeatherIcon(icon: WeatherIconsSVG.cloudyDay1, size: 28),
+        WeatherIcon(
+          icon: hourlyData != null
+              ? getWeatherIcon(weatherCode)
+              : WeatherIconsSVG.missingData,
+          size: 28,
+        ),
         CustomText(
-          text: "23°",
-          color: accent_color,
+          text: '${hourlyData?.temperature2m[weatherIndex].round() ?? '-'}°',
+          color: accentColor,
           fontWeight: FontWeight(800),
         ),
       ],

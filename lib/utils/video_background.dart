@@ -5,7 +5,7 @@ class VideoBackground extends StatefulWidget {
   final Widget child;
   final double height;
   final double width;
-  VideoBackground({
+  const VideoBackground({
     super.key,
     required this.child,
     required this.height,
@@ -19,6 +19,7 @@ class VideoBackground extends StatefulWidget {
 class _VideoBackgroundState extends State<VideoBackground> {
   late VideoPlayerController _controller;
   // init video player
+  @override
   void initState() {
     _controller = VideoPlayerController.asset('assets/videos/clouds.mp4')
       ..initialize().then((_) {

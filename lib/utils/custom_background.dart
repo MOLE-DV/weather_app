@@ -14,7 +14,7 @@ class CustomBackground extends StatelessWidget {
       children: [
         SizedBox(
           width: screenWidth,
-          height: clampDouble(screenHeight * 0.45, 450, 600),
+          height: clampDouble(screenHeight * 0.4, 350, 600),
           child: ClipRRect(
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(40),

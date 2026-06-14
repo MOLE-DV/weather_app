@@ -1,6 +1,8 @@
 class WeatherIconsSVG {
   static const _base = 'assets/icons/weather-icons/original/static';
 
+  static const missingData = "$_base/missing_data.svg";
+
   static const clearDay = '$_base/clear-day.svg';
   static const clearNight = '$_base/clear-night.svg';
 
@@ -55,6 +57,7 @@ class WeatherIconsSVG {
   static const snowAndSleetMix = '$_base/snow-and-sleet-mix.svg';
 
   static const snow = '$_base/snow.svg';
+  static const frost = "$_base/frost.svg";
 
   static const snowy1 = '$_base/snowy-1.svg';
   static const snowy2 = '$_base/snowy-2.svg';

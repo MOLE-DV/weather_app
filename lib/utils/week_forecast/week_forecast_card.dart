@@ -1,52 +1,62 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:weather_app/api/weather_api.dart';
 import 'package:weather_app/icons/weather_icon.dart';
 import 'package:weather_app/icons/weather_icons_SVG.dart';
 import 'package:weather_app/utils/custom_text.dart';
 import 'package:weather_app/utils/month_and_week_names.dart';
+import 'package:weather_app/utils/translations.dart';
 
 class WeekForecastCard extends StatelessWidget {
   final DateTime date;
-  final String weather;
-  final List<int> temps;
+  final Daily? dailyForecast;
   const WeekForecastCard({
     super.key,
     required this.date,
-    required this.weather,
-    required this.temps,
+    required this.dailyForecast,
   });
   @override
   Widget build(BuildContext context) {
     MonthAndWeekNames monthAndWeekNames = MonthAndWeekNames();
     String formatedDate =
         "${date.day.toString()} ${monthAndWeekNames.getMonthName(date.month - 1, SupportedLanguage.pl)}";
+
     DateTime now = DateTime.now();
 
     var screenWidth = MediaQuery.of(context).size.width;
 
     double weatherTextShrinkWidth = 450;
+
+    String iso8601DateNoTime = DateFormat("yyyy-MM-dd").format(date);
+    int? weatherIndex = dailyForecast?.time.indexOf(iso8601DateNoTime) ?? 0;
+    int? weatherCode = dailyForecast?.weatherCode[weatherIndex];
+    int? temperature2mMin = dailyForecast?.temperature2mMin[weatherIndex]
+        .round();
+    int? temperature2mMax = dailyForecast?.temperature2mMax[weatherIndex]
+        .round();
+
+    String weather = dailyForecast != null
+        ? translations[SupportedLanguage.pl]!['weather'][weatherCode]
+        : '-';
+
     String formatedWeatherString = weather;
     if (screenWidth <= weatherTextShrinkWidth) {
       formatedWeatherString =
-          weather.substring(
-            0,
-            clampDouble(
-              screenWidth / 4.5 / (weather.length * 0.5),
-              0,
-              weather.length - 1,
-            ).toInt(),
-          ) +
-          "...";
+          "${weather.substring(0, clampDouble(screenWidth / 3 / (weather.length * 0.5), 0, weather.length - 1).toInt())}...";
     }
-    ;
+
+    String weekName = monthAndWeekNames.getWeekName(
+      date.weekday - 1,
+      SupportedLanguage.pl,
+    );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // date
-        SizedBox(
-          width: 85,
+        FittedBox(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 5,
@@ -54,33 +64,35 @@ class WeekForecastCard extends StatelessWidget {
               CustomText(
                 text: date.compareTo(now) == 0
                     ? "Dziś"
-                    : monthAndWeekNames.getWeekName(
-                        date.weekday - 1,
-                        SupportedLanguage.pl,
-                      ),
+                    : weekName.substring(0, 1).toUpperCase() +
+                          weekName.substring(1),
                 fontWeight: FontWeight(500),
                 color: Colors.black,
-                fontSize: 13,
+                fontSize: 10,
               ),
               CustomText(
                 text: formatedDate,
                 fontWeight: FontWeight(300),
                 color: Colors.black,
-                fontSize: 8,
+                fontSize: 6,
               ),
             ],
           ),
         ),
 
         // current weather conditions
-        SizedBox(
-          width: screenWidth <= weatherTextShrinkWidth ? screenWidth / 4 : 200,
+        FittedBox(
           child: Row(
             spacing: 15,
             children: [
-              WeatherIcon(icon: WeatherIconsSVG.cloudy, size: 15),
+              WeatherIcon(
+                icon: weatherCode != null
+                    ? getWeatherIcon(weatherCode)
+                    : WeatherIconsSVG.missingData,
+                size: 15,
+              ),
               CustomText(
-                text: formatedWeatherString,
+                text: weather.length > 10 ? formatedWeatherString : weather,
                 color: Colors.black,
                 fontWeight: FontWeight(300),
                 fontSize: 10,
@@ -90,34 +102,36 @@ class WeekForecastCard extends StatelessWidget {
         ),
 
         // temperatures throughout the day
-        Row(
-          spacing: 10,
-          children: [
-            CustomText(
-              text: "${temps[0]}°",
-              color: Colors.blueAccent,
-              fontSize: 12,
-            ),
-            screenWidth > 480
-                ? Container(
-                    width: screenWidth / 10,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: <Color>[Colors.blue, Colors.orangeAccent],
+        FittedBox(
+          child: Row(
+            spacing: 10,
+            children: [
+              CustomText(
+                text: "${temperature2mMin ?? '-'}°",
+                color: Colors.blueAccent,
+                fontSize: 12,
+              ),
+              screenWidth > 360
+                  ? Container(
+                      width: screenWidth / 10,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: <Color>[Colors.blue, Colors.orangeAccent],
+                        ),
                       ),
-                    ),
-                  )
-                : SizedBox.shrink(),
-            CustomText(
-              text: "${temps[1]}°",
-              color: Colors.orangeAccent,
-              fontSize: 12,
-            ),
-          ],
+                    )
+                  : SizedBox.shrink(),
+              CustomText(
+                text: "${temperature2mMax ?? '-'}°",
+                color: Colors.orangeAccent,
+                fontSize: 12,
+              ),
+            ],
+          ),
         ),
       ],
     );

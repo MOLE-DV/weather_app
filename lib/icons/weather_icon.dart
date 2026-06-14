@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:weather_app/icons/weather_icons_SVG.dart';
 
 class WeatherIcon extends StatelessWidget {
   final String icon;

@@ -4,10 +4,15 @@ import 'package:weather_app/utils/custom_text.dart';
 class CustomCardTopPanel extends StatelessWidget {
   String topPanelText;
   bool showSeeMoreButton;
+  double? topPanelTextSize;
+  Widget? panelRightWidget;
+
   CustomCardTopPanel({
     super.key,
     required this.topPanelText,
     required this.showSeeMoreButton,
+    this.topPanelTextSize = 12,
+    this.panelRightWidget,
   });
 
   @override
@@ -18,7 +23,7 @@ class CustomCardTopPanel extends StatelessWidget {
       children: [
         CustomText(
           text: topPanelText,
-          fontSize: 12,
+          fontSize: topPanelTextSize,
           fontWeight: FontWeight(600),
           color: Colors.black,
         ),
@@ -38,6 +43,7 @@ class CustomCardTopPanel extends StatelessWidget {
                 ),
               )
             : SizedBox.shrink(),
+        if (panelRightWidget != null) panelRightWidget!,
       ],
     );
   }

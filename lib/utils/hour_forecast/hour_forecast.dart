@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_app/api/weather_api.dart';
 import 'package:weather_app/utils/hour_forecast/hour_forecast_card.dart';
 
 class HourForecast extends StatelessWidget {
-  const HourForecast({super.key});
+  final Hourly? hourlyData;
+  const HourForecast({super.key, required this.hourlyData});
 
   @override
   Widget build(BuildContext context) {
@@ -11,12 +13,17 @@ class HourForecast extends StatelessWidget {
     final children = <Widget>[];
 
     var screenWidth = MediaQuery.of(context).size.width;
-    int children_count = (clampDouble(screenWidth / 90, 2, 7)).round();
+    int childrenCount = (clampDouble(screenWidth / 90, 2, 7)).round();
 
-    for (int i = 0; i < children_count; i++) {
-      children.add(HourForecastCard(hour: now.add(Duration(hours: i)).hour));
+    for (int i = 0; i < childrenCount; i++) {
+      children.add(
+        HourForecastCard(
+          date: now.add(Duration(hours: i)),
+          hourlyData: hourlyData,
+        ),
+      );
 
-      if (i < children_count - 1) {
+      if (i < childrenCount - 1) {
         children.add(const VerticalDivider());
       }
     }

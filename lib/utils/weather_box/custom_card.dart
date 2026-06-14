@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_app/utils/custom_text.dart';
 import 'package:weather_app/utils/weather_box/custom_card_top_panel.dart';
 
 class CustomCard extends StatelessWidget {
-  String? topPanelText;
-  bool? showSeeMoreButton;
+  final String topPanelText;
+  final bool showSeeMoreButton;
   Widget child;
+  double? topPanelTextSize;
+  Widget? panelRightWidget;
 
   CustomCard({
     super.key,
-    this.topPanelText = "",
-    this.showSeeMoreButton = false,
+    required this.topPanelText,
+    required this.showSeeMoreButton,
     required this.child,
+    this.topPanelTextSize = 12,
+    this.panelRightWidget,
   });
 
   @override
@@ -32,10 +34,12 @@ class CustomCard extends StatelessWidget {
         child: Column(
           children: [
             // top panel
-            topPanelText!.isNotEmpty
+            topPanelText.isNotEmpty
                 ? CustomCardTopPanel(
-                    topPanelText: topPanelText!,
-                    showSeeMoreButton: true,
+                    topPanelText: topPanelText,
+                    showSeeMoreButton: showSeeMoreButton,
+                    topPanelTextSize: topPanelTextSize,
+                    panelRightWidget: panelRightWidget,
                   )
                 : SizedBox.shrink(),
             // box content

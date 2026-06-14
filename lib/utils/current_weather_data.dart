@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:weather_app/api/weather_api.dart';
+import 'package:weather_app/icons/weather_icon.dart';
+import 'package:weather_app/icons/weather_icons_SVG.dart';
 import 'package:weather_app/utils/custom_text.dart';
+import 'package:weather_app/utils/translations.dart';
 import 'package:weather_app/utils/weather_stats_bar.dart';
 
 class CurrentWeatherData extends StatelessWidget {
-  const CurrentWeatherData({super.key});
+  final Current? currentForecast;
+  final Daily? dailyForecast;
+  final CurrentUnits? currentUnits;
+  final DailyUnits? dailyUnits;
+
+  const CurrentWeatherData({
+    super.key,
+    required this.currentForecast,
+    required this.dailyForecast,
+    required this.currentUnits,
+    required this.dailyUnits,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,25 +31,42 @@ class CurrentWeatherData extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
           children: [
-            CustomText(text: "23", fontSize: 90),
+            CustomText(
+              text: '${currentForecast?.temperature2m.round() ?? "-"}',
+              fontSize: 90,
+            ),
             Transform.translate(
               offset: Offset(0, -32),
               child: CustomText(text: '°', fontSize: 50),
             ),
-            Icon(Icons.cloud, color: Colors.white, size: 50),
+            Transform.translate(
+              offset: Offset(20, 50),
+              child: WeatherIcon(
+                icon: currentForecast != null
+                    ? getWeatherIcon(currentForecast!.weatherCode)
+                    : WeatherIconsSVG.missingData,
+                size: 60,
+              ),
+            ),
           ],
         ),
         CustomText(
-          text: "Częściowe zachmurzenie",
+          text: currentForecast != null
+              ? translations[SupportedLanguage.pl]!['weather'][currentForecast!
+                    .weatherCode]
+              : '-',
           fontWeight: FontWeight(400),
           fontSize: 20,
         ),
         CustomText(
-          text: 'Odczuwalna 24°',
+          text: 'Odczuwalna ${currentForecast?.apparentTemperature ?? '-'}°',
           fontSize: 15,
           fontWeight: FontWeight(200),
         ),
-        WeatherStatsBar(),
+        WeatherStatsBar(
+          currentForecast: currentForecast,
+          dailyForecast: dailyForecast,
+        ),
       ],
     );
   }

@@ -1,44 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/api/weather_api.dart';
 import 'package:weather_app/utils/custom_text.dart';
 
-enum statType { wind, humidity, uv, pressure }
+enum statType { wind, uv, humidity, pressure }
 
 class WeatherStat extends StatelessWidget {
   final statType type;
-  WeatherStat({super.key, required this.type});
+  final Current? currentForecast;
+  final Daily? dailyForecast;
+
+  const WeatherStat({
+    super.key,
+    required this.type,
+    required this.currentForecast,
+    required this.dailyForecast,
+  });
   @override
   Widget build(BuildContext context) {
     String value;
     String name;
-    IconData weather_icon;
+    IconData weatherIcon;
 
     switch (type) {
       case statType.wind:
-        value = '11 km/h';
+        value = '${currentForecast?.windSpeed10m.round() ?? "-"} km/h';
         name = 'Wiatr';
-        weather_icon = Icons.wind_power_outlined;
+        weatherIcon = Icons.wind_power_outlined;
         break;
       case statType.humidity:
-        value = '45%';
+        value = '${currentForecast?.relativeHumidity2m ?? '-'}%';
         name = 'Wilgotność';
-        weather_icon = Icons.water_drop_outlined;
+        weatherIcon = Icons.water_drop_outlined;
         break;
       case statType.uv:
-        value = '5';
+        value = '${dailyForecast?.uvIndexMax[0].round() ?? '-'}';
         name = 'UV';
-        weather_icon = Icons.wb_sunny_outlined;
+        weatherIcon = Icons.wb_sunny_outlined;
         break;
       case statType.pressure:
-        value = '1016 hPa';
+        value = '${currentForecast?.surfacePressure.round() ?? '-'} hPa';
         name = 'Ciśnienie';
-        weather_icon = Icons.lock_clock_outlined;
+        weatherIcon = Icons.lock_clock_outlined;
         break;
     }
     return FittedBox(
       child: Row(
         spacing: 10,
         children: [
-          Icon(weather_icon, color: Colors.white, size: 20),
+          Icon(weatherIcon, color: Colors.white, size: 20),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
