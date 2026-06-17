@@ -2,10 +2,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AirQualityApi {
-  Future<AirQualityResponse?> getAirQuality() async {
+  Future<AirQualityResponse?> getAirQuality(
+    double latitude,
+    double longitude,
+  ) async {
     final response = await http.get(
       Uri.parse(
-        "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=52.52&longitude=13.41&current=european_aqi,us_aqi&timezone=auto",
+        "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=$latitude&longitude=$longitude&current=european_aqi,us_aqi&timezone=auto",
       ),
     );
 

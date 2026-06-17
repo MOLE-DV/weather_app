@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/api/air_quality_api.dart';
+import 'package:weather_app/api/geo_api.dart';
 import 'package:weather_app/api/weather_api.dart';
 import 'package:weather_app/icons/weather_icon.dart';
 import 'package:weather_app/icons/weather_icons_SVG.dart';
 import 'package:weather_app/utils/air_quality.dart';
+import 'package:weather_app/utils/appbar_location_indicator.dart';
 import 'package:weather_app/utils/current_weather_data.dart';
 import 'package:weather_app/utils/custom_background.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/utils/hour_forecast/hour_forecast.dart';
 import 'package:weather_app/utils/sunset_and_sunrise_time.dart';
 import 'package:weather_app/utils/weather_box/custom_card.dart';
 import 'package:weather_app/utils/week_forecast/week_forecast.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final GeoResult? placeData;
+  final Function changeLocation;
+  const HomePage({
+    super.key,
+    required this.placeData,
+    required this.changeLocation,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -23,16 +31,32 @@ class _HomePageState extends State<HomePage> {
   WeatherResponse? weatherData;
   AirQualityResponse? airQualityData;
 
+  final Box<GeoResult> box = Hive.box('geoBox');
+
   @override
   void initState() {
     super.initState();
-    getWeatherData();
-    getAirQualityData();
+
+    //TODO: Dodaj ekran ładowania
+
+    // showGeneralDialog(
+    //   context: context,
+    //   pageBuilder: (context, animation, secondaryAnimation) {
+    //     return Material(child: Text("loading"));
+    //   },
+    // );
+    // getWeatherData();
+    // getAirQualityData();
   }
 
-  getWeatherData() async {
+  Future<void> getWeatherData() async {
+    if (widget.placeData == null) return;
+
     WeatherApi api = WeatherApi();
-    var response = await api.getWeather();
+    var response = await api.getWeather(
+      widget.placeData!.latitude,
+      widget.placeData!.longitude,
+    );
 
     if (response != null) {
       setState(() {
@@ -43,9 +67,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  getAirQualityData() async {
+  Future<void> getAirQualityData() async {
+    if (widget.placeData == null) return;
+
     AirQualityApi api = AirQualityApi();
-    var response = await api.getAirQuality();
+    var response = await api.getAirQuality(
+      widget.placeData!.latitude,
+      widget.placeData!.longitude,
+    );
 
     if (response != null) {
       setState(() {
@@ -56,43 +85,44 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> changeLocationAndUpdateData(GeoResult result) async {
+    await box.add(result);
+
+    widget.changeLocation(result);
+
+    await getWeatherData();
+    await getAirQualityData();
+
+    if (!mounted) return;
+
+    Navigator.pop(context);
+  }
+
+  void onImageFinishedLoading() {
+    print("finished Loading");
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       extendBodyBehindAppBar: true,
+
+      // weather app bar
       appBar: AppBar(
         elevation: 0.0,
         centerTitle: true,
         backgroundColor: Color.fromARGB(0, 0, 0, 0),
         iconTheme: IconThemeData(color: Colors.white),
-        title: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              spacing: 8,
-              children: [
-                Icon(Icons.location_pin, size: 18),
-                Text("Warta", style: GoogleFonts.inter(color: Colors.white)),
-              ],
-            ),
-            Text(
-              "woj. łódzkie",
-              style: GoogleFonts.inter(color: Colors.white, fontSize: 12),
-            ),
-          ],
+        title: AppBarLocationIndicator(
+          placeData: widget.placeData,
+          onSelected: changeLocationAndUpdateData,
         ),
-        actions: [
-          IconButton(
-            onPressed: () => print("sda"),
-            icon: Icon(Icons.notifications_outlined),
-          ),
-        ],
       ),
+
+      // body
       body: RefreshIndicator(
         onRefresh: () async {
           getWeatherData();
@@ -102,6 +132,7 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.only(top: 0, bottom: 20),
           children: [
             CustomBackground(
+              onImageFinishedLoading: onImageFinishedLoading,
               child: Padding(
                 padding: EdgeInsetsGeometry.only(left: 20, right: 20, top: 80),
                 child: Column(

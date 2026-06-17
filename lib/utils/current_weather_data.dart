@@ -59,7 +59,8 @@ class CurrentWeatherData extends StatelessWidget {
           fontSize: 20,
         ),
         CustomText(
-          text: 'Odczuwalna ${currentForecast?.apparentTemperature ?? '-'}°',
+          text:
+              'Odczuwalna ${currentForecast?.apparentTemperature.round() ?? '-'}°',
           fontSize: 15,
           fontWeight: FontWeight(200),
         ),

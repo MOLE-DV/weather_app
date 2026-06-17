@@ -15,6 +15,8 @@ class HourForecast extends StatelessWidget {
     var screenWidth = MediaQuery.of(context).size.width;
     int childrenCount = (clampDouble(screenWidth / 90, 2, 7)).round();
 
+    print(now.add(Duration(hours: childrenCount - 1)));
+
     for (int i = 0; i < childrenCount; i++) {
       children.add(
         HourForecastCard(

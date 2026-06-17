@@ -19,11 +19,7 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-      ),
+    return Card(
       child: Padding(
         padding: EdgeInsetsGeometry.only(
           left: 20,

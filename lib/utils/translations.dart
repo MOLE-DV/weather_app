@@ -2,6 +2,7 @@ enum SupportedLanguage { pl, en }
 
 Map<SupportedLanguage, Map<String, dynamic>> translations = {
   SupportedLanguage.pl: {
+    "select_location": "Wybierz lokalizacje",
     "month": [
       "styczeń",
       "luty",
@@ -65,6 +66,7 @@ Map<SupportedLanguage, Map<String, dynamic>> translations = {
     },
   },
   SupportedLanguage.en: {
+    "select_location": "Select location",
     "month": [
       "january",
       "february",

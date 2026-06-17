@@ -594,10 +594,10 @@ var exampleResponse = {
 };
 
 class WeatherApi {
-  Future<WeatherResponse?> getWeather() async {
+  Future<WeatherResponse?> getWeather(double latitude, double longitude) async {
     final response = await http.get(
       Uri.parse(
-        "https://api.open-meteo.com/v1/forecast?latitude=51.7105&longitude=18.6248&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,surface_pressure,wind_speed_10m&timezone=auto",
+        "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,surface_pressure,wind_speed_10m&timezone=auto",
       ),
     );
 
@@ -607,7 +607,6 @@ class WeatherApi {
     } else {
       return null;
     }
-    // return WeatherResponse.fromJson(exampleResponse);
   }
 }
 

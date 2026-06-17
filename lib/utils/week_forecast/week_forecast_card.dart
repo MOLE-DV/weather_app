@@ -56,82 +56,76 @@ class WeekForecastCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // date
-        FittedBox(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 5,
-            children: [
-              CustomText(
-                text: date.compareTo(now) == 0
-                    ? "Dziś"
-                    : weekName.substring(0, 1).toUpperCase() +
-                          weekName.substring(1),
-                fontWeight: FontWeight(500),
-                color: Colors.black,
-                fontSize: 10,
-              ),
-              CustomText(
-                text: formatedDate,
-                fontWeight: FontWeight(300),
-                color: Colors.black,
-                fontSize: 6,
-              ),
-            ],
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 5,
+          children: [
+            CustomText(
+              text: date.day == now.day
+                  ? "Dziś"
+                  : weekName.substring(0, 1).toUpperCase() +
+                        weekName.substring(1),
+              fontWeight: FontWeight(500),
+              color: Colors.black,
+              fontSize: 10,
+            ),
+            CustomText(
+              text: formatedDate,
+              fontWeight: FontWeight(300),
+              color: Colors.black,
+              fontSize: 9,
+            ),
+          ],
         ),
 
         // current weather conditions
-        FittedBox(
-          child: Row(
-            spacing: 15,
-            children: [
-              WeatherIcon(
-                icon: weatherCode != null
-                    ? getWeatherIcon(weatherCode)
-                    : WeatherIconsSVG.missingData,
-                size: 15,
-              ),
-              CustomText(
-                text: weather.length > 10 ? formatedWeatherString : weather,
-                color: Colors.black,
-                fontWeight: FontWeight(300),
-                fontSize: 10,
-              ),
-            ],
-          ),
+        Row(
+          spacing: 15,
+          children: [
+            WeatherIcon(
+              icon: weatherCode != null
+                  ? getWeatherIcon(weatherCode)
+                  : WeatherIconsSVG.missingData,
+              size: 15,
+            ),
+            CustomText(
+              text: weather.length > 10 ? formatedWeatherString : weather,
+              color: Colors.black,
+              fontWeight: FontWeight(300),
+              fontSize: 10,
+            ),
+          ],
         ),
 
         // temperatures throughout the day
-        FittedBox(
-          child: Row(
-            spacing: 10,
-            children: [
-              CustomText(
-                text: "${temperature2mMin ?? '-'}°",
-                color: Colors.blueAccent,
-                fontSize: 12,
-              ),
-              screenWidth > 360
-                  ? Container(
-                      width: screenWidth / 10,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: <Color>[Colors.blue, Colors.orangeAccent],
-                        ),
+        Row(
+          spacing: 10,
+          children: [
+            CustomText(
+              text: "${temperature2mMin ?? '-'}°",
+              color: Colors.blueAccent,
+              fontSize: 12,
+            ),
+            screenWidth > 360
+                ? Container(
+                    width: screenWidth / 10,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: <Color>[Colors.blue, Colors.orangeAccent],
                       ),
-                    )
-                  : SizedBox.shrink(),
-              CustomText(
-                text: "${temperature2mMax ?? '-'}°",
-                color: Colors.orangeAccent,
-                fontSize: 12,
-              ),
-            ],
-          ),
+                    ),
+                  )
+                : SizedBox.shrink(),
+            CustomText(
+              text: "${temperature2mMax ?? '-'}°",
+              color: Colors.orangeAccent,
+              fontSize: 12,
+            ),
+          ],
         ),
       ],
     );
