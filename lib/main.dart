@@ -109,7 +109,7 @@ class _MainAppState extends State<MainApp> {
     }
 
     return MaterialApp(
-      themeMode: ThemeMode.dark,
+      themeMode: themeMode,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       debugShowCheckedModeBanner: false,
