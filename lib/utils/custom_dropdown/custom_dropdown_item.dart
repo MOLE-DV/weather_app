@@ -21,7 +21,7 @@ class CustomDropdownItem extends StatelessWidget {
         onPressed: () => onSelected(placeData),
         style: buttonStyle,
         child: Container(
-          height: 50,
+          height: 25,
           alignment: Alignment.center,
           child: CustomText(
             text: '${placeData.name} ${placeData.admin1} ${placeData.country}',

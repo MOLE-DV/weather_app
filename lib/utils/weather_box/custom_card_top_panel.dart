@@ -4,14 +4,12 @@ import 'package:weather_app/utils/custom_text.dart';
 class CustomCardTopPanel extends StatelessWidget {
   String topPanelText;
   bool showSeeMoreButton;
-  double? topPanelTextSize;
   Widget? panelRightWidget;
 
   CustomCardTopPanel({
     super.key,
     required this.topPanelText,
     required this.showSeeMoreButton,
-    this.topPanelTextSize = 12,
     this.panelRightWidget,
   });
 
@@ -21,22 +19,15 @@ class CustomCardTopPanel extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        CustomText(
-          text: topPanelText,
-          fontSize: topPanelTextSize,
-          fontWeight: FontWeight(600),
-          color: Colors.black,
-        ),
+        Text(topPanelText, style: Theme.of(context).textTheme.bodyLarge),
         showSeeMoreButton
             ? GestureDetector(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CustomText(
-                      text: "Zobacz więcej",
-                      color: Colors.blueAccent,
-                      fontWeight: FontWeight(600),
-                      fontSize: 10,
+                    Text(
+                      "Zobacz więcej",
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                     Icon(Icons.arrow_right, color: Colors.blueAccent),
                   ],

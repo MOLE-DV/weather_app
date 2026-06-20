@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:weather_app/icons/weather_icons_SVG.dart';
 import 'dart:convert';
 
@@ -846,36 +847,85 @@ String decodeWeatherCode(int weatherCode, SupportedLanguage lang) {
   return translations[lang]!['weather'][weatherCode];
 }
 
-String getWeatherIcon(int weatherCode) {
-  Map<int, String> weatherCodeIcons = {
-    0: WeatherIconsSVG.clearDay,
-    1: WeatherIconsSVG.fairDay,
-    2: WeatherIconsSVG.cloudyDay1,
-    3: WeatherIconsSVG.cloudy,
-    45: WeatherIconsSVG.fog,
-    48: WeatherIconsSVG.frost,
-    51: WeatherIconsSVG.rainy2,
-    53: WeatherIconsSVG.rainy3,
-    55: WeatherIconsSVG.rainy3,
-    56: WeatherIconsSVG.snowy2,
-    57: WeatherIconsSVG.snowy3,
-    61: WeatherIconsSVG.rainy4,
-    63: WeatherIconsSVG.rainy5,
-    65: WeatherIconsSVG.rainy6,
-    67: WeatherIconsSVG.rainy7,
-    71: WeatherIconsSVG.snowy4,
-    73: WeatherIconsSVG.snowy5,
-    75: WeatherIconsSVG.snowy6,
-    77: WeatherIconsSVG.sleet,
-    80: WeatherIconsSVG.rainy1,
-    81: WeatherIconsSVG.rainy2,
-    82: WeatherIconsSVG.rainy3,
-    85: WeatherIconsSVG.snowy2,
-    86: WeatherIconsSVG.snowy3,
-    95: WeatherIconsSVG.thunder,
-    96: WeatherIconsSVG.thunder,
-    99: WeatherIconsSVG.thunder,
-  };
+bool isNight(DateTime now, Daily? dailyData) {
+  if (dailyData == null) {
+    return false;
+  }
+
+  String date = DateFormat('yyyy-MM-dd').format(now);
+
+  int dayIndex = dailyData.time.indexOf(date);
+
+  DateTime sunrise = DateTime.parse(dailyData.sunrise[dayIndex]);
+  DateTime sunset = DateTime.parse(dailyData.sunset[dayIndex]);
+
+  if (now.compareTo(sunrise) < 0 || now.compareTo(sunset) > 0) {
+    return true;
+  }
+
+  return false;
+}
+
+String getWeatherIcon(int weatherCode, bool isNight) {
+  Map<int, String> weatherCodeIcons = isNight
+      ? {
+          0: WeatherIconsSVG.clearNight,
+          1: WeatherIconsSVG.fairNight,
+          2: WeatherIconsSVG.cloudyNight1,
+          3: WeatherIconsSVG.cloudy,
+          45: WeatherIconsSVG.fog,
+          48: WeatherIconsSVG.frost,
+          51: WeatherIconsSVG.rainy4,
+          53: WeatherIconsSVG.rainy5,
+          55: WeatherIconsSVG.rainy5,
+          56: WeatherIconsSVG.snowy4,
+          57: WeatherIconsSVG.snowy5,
+          61: WeatherIconsSVG.rainy4,
+          63: WeatherIconsSVG.rainy5,
+          65: WeatherIconsSVG.rainy6,
+          67: WeatherIconsSVG.rainy7,
+          71: WeatherIconsSVG.snowy4,
+          73: WeatherIconsSVG.snowy5,
+          75: WeatherIconsSVG.snowy6,
+          77: WeatherIconsSVG.sleet,
+          80: WeatherIconsSVG.rainy5,
+          81: WeatherIconsSVG.rainy4,
+          82: WeatherIconsSVG.rainy5,
+          85: WeatherIconsSVG.snowy4,
+          86: WeatherIconsSVG.snowy5,
+          95: WeatherIconsSVG.thunder,
+          96: WeatherIconsSVG.thunder,
+          99: WeatherIconsSVG.thunder,
+        }
+      : {
+          0: WeatherIconsSVG.clearDay,
+          1: WeatherIconsSVG.fairDay,
+          2: WeatherIconsSVG.cloudyDay1,
+          3: WeatherIconsSVG.cloudy,
+          45: WeatherIconsSVG.fog,
+          48: WeatherIconsSVG.frost,
+          51: WeatherIconsSVG.rainy2,
+          53: WeatherIconsSVG.rainy3,
+          55: WeatherIconsSVG.rainy3,
+          56: WeatherIconsSVG.snowy2,
+          57: WeatherIconsSVG.snowy3,
+          61: WeatherIconsSVG.rainy4,
+          63: WeatherIconsSVG.rainy5,
+          65: WeatherIconsSVG.rainy6,
+          67: WeatherIconsSVG.rainy7,
+          71: WeatherIconsSVG.snowy4,
+          73: WeatherIconsSVG.snowy5,
+          75: WeatherIconsSVG.snowy6,
+          77: WeatherIconsSVG.sleet,
+          80: WeatherIconsSVG.rainy1,
+          81: WeatherIconsSVG.rainy2,
+          82: WeatherIconsSVG.rainy3,
+          85: WeatherIconsSVG.snowy2,
+          86: WeatherIconsSVG.snowy3,
+          95: WeatherIconsSVG.thunder,
+          96: WeatherIconsSVG.thunder,
+          99: WeatherIconsSVG.thunder,
+        };
 
   if (!weatherCodeIcons.containsKey(weatherCode)) {
     return WeatherIconsSVG.missingData;

@@ -38,7 +38,7 @@ class CustomDropdown extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
-          width: 450,
+          width: width,
           height: dropdownHeight,
           child: Column(
             spacing: 5,

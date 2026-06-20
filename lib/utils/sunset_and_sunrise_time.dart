@@ -3,6 +3,7 @@ import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:weather_app/api/weather_api.dart';
 import 'package:weather_app/icons/weather_icon.dart';
 import 'package:weather_app/icons/weather_icons_SVG.dart';
+import 'package:weather_app/themes/extenstions/day_cycle_slider_colors.dart';
 import 'package:weather_app/utils/custom_text.dart';
 
 class SunriseAndSunsetTime extends StatelessWidget {
@@ -25,7 +26,7 @@ class SunriseAndSunsetTime extends StatelessWidget {
           spacing: 5,
           children: [
             WeatherIcon(icon: WeatherIconsSVG.day, size: 20),
-            CustomText(text: sunrise, color: Colors.black, fontSize: 10),
+            Text(sunrise, style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
         SleekCircularSlider(
@@ -41,15 +42,14 @@ class SunriseAndSunsetTime extends StatelessWidget {
               trackWidth: 2,
               handlerSize: 7,
             ),
-            customColors: CustomSliderColors(
-              dotColor: Colors.amber,
-              progressBarColor: Colors.amber,
-              trackColor: Colors.grey[100],
-            ),
+            customColors: Theme.of(
+              context,
+            ).extension<DayCycleSliderColors>()?.colors,
             infoProperties: InfoProperties(
               modifier: (_) {
                 return "${now.hour < 10 ? "0" : ""}${now.hour}:${now.minute < 10 ? "0" : ""}${now.minute}";
               },
+              mainLabelStyle: Theme.of(context).textTheme.labelLarge,
             ),
           ),
         ),
@@ -57,7 +57,7 @@ class SunriseAndSunsetTime extends StatelessWidget {
           spacing: 5,
           children: [
             WeatherIcon(icon: WeatherIconsSVG.night, size: 20),
-            CustomText(text: sunset, color: Colors.black, fontSize: 10),
+            Text(sunset, style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
       ],

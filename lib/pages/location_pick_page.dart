@@ -4,14 +4,20 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/api/geo_api.dart';
-import 'package:weather_app/themes/gradient_theme.dart';
+import 'package:weather_app/themes/extenstions/gradient_theme.dart';
 import 'package:weather_app/themes/light_theme.dart';
+import 'package:weather_app/utils/custom_button.dart';
 import 'package:weather_app/utils/custom_dropdown/custom_dropdown.dart';
 import 'package:weather_app/utils/custom_text.dart';
 
 class LocationPickPage extends StatefulWidget {
-  final Function onPick;
-  const LocationPickPage({super.key, required this.onPick});
+  final Function changeLocation;
+  bool closeButton;
+  LocationPickPage({
+    super.key,
+    required this.changeLocation,
+    this.closeButton = false,
+  });
 
   @override
   State<LocationPickPage> createState() => _LocationPickPageState();
@@ -49,7 +55,6 @@ class _LocationPickPageState extends State<LocationPickPage> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Upiększ
     return Scaffold(
       body: DecoratedBox(
         decoration: BoxDecoration(
@@ -94,26 +99,41 @@ class _LocationPickPageState extends State<LocationPickPage> {
                       CustomDropdown(
                         results: locationsData?.results,
                         controller: controller,
-                        onSelected: widget.onPick,
+                        onSelected: widget.changeLocation,
                       ),
 
                       // Search button
-                      FittedBox(
-                        child: ElevatedButton(
-                          onPressed: getLocations,
-                          style: Theme.of(context).elevatedButtonTheme.style,
-                          child: Row(
-                            spacing: 10,
-                            children: [
-                              Icon(Icons.search, color: Colors.white),
-                              CustomText(
-                                text: "Wyszukaj",
-                                color: Colors.white,
-                                fontWeight: FontWeight(350),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          FittedBox(
+                            child: CustomButton(
+                              onPressed: getLocations,
+                              icon: Icon(Icons.search, color: Colors.white),
+                              child: Text(
+                                "Wyszukaj",
+                                style: GoogleFonts.inter(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
+                          if (widget.closeButton)
+                            FittedBox(
+                              child: CustomButton(
+                                onPressed: () => Navigator.pop(context),
+                                icon: Icon(Icons.close, color: Colors.white),
+                                child: Text(
+                                  "Zamknij",
+                                  style: GoogleFonts.inter(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),

@@ -4,58 +4,67 @@ import 'package:weather_app/icons/weather_icon.dart';
 import 'package:weather_app/icons/weather_icons_SVG.dart';
 import 'package:weather_app/utils/custom_text.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/utils/month_and_week_names.dart';
+import 'package:weather_app/utils/translations.dart';
 
 class HourForecastCard extends StatelessWidget {
   final DateTime date;
   final Hourly? hourlyData;
+  final Daily? dailyData;
   const HourForecastCard({
     super.key,
     required this.date,
     required this.hourlyData,
+    required this.dailyData,
   });
 
   @override
   Widget build(BuildContext context) {
     var now = DateTime.now();
-
-    Color accentColor = Colors.black;
+    bool isCurrenHour = now.hour == date.hour;
 
     // format the date to iso8601 string format and remove unnecessary minutes
-    String formatedDate = DateFormat("yyyy-MM-dd'T'HH:00").format(date);
+    String formatedDateHourly = DateFormat("yyyy-MM-dd'T'HH:00").format(date);
 
     // get index of date in the database then search for temperature data at this index
-    int weatherIndex = hourlyData != null
-        ? hourlyData!.time.indexOf(formatedDate)
-        : 0;
-    int weatherCode = hourlyData != null
-        ? hourlyData!.weatherCode[weatherIndex]
-        : 0;
+    int weatherIndex = hourlyData?.time.indexOf(formatedDateHourly) ?? 0;
+    int weatherCode = hourlyData?.weatherCode[weatherIndex] ?? 0;
 
-    if (date.hour == now.hour) {
-      accentColor = Colors.blueAccent;
-    }
+    String hourText = isCurrenHour
+        ? "Teraz"
+        : "${(date.hour) < 10 ? "0" : ""}${(date.hour).toString()}:00";
+
+    String tempText =
+        '${hourlyData?.temperature2m[weatherIndex].round() ?? '-'}°';
+
+    TextStyle? textStyle = isCurrenHour
+        ? Theme.of(context).textTheme.labelMedium
+        : Theme.of(context).textTheme.bodyMedium;
+
+    print(date.weekday);
+
     return Column(
       spacing: 10,
       children: [
-        CustomText(
-          text: date.hour == now.hour
-              ? "Teraz"
-              : "${(date.hour) < 10 ? "0" : ""}${(date.hour).toString()}:00",
-          color: accentColor,
-          fontSize: 12,
-          fontWeight: FontWeight(400),
+        Column(
+          children: [
+            Text(hourText, style: textStyle, textAlign: TextAlign.center),
+            Text(
+              now.day != date.day
+                  ? getWeekName(date.weekday - 1, SupportedLanguage.pl)
+                  : '',
+              style: Theme.of(context).textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
         WeatherIcon(
           icon: hourlyData != null
-              ? getWeatherIcon(weatherCode)
+              ? getWeatherIcon(weatherCode, isNight(date, dailyData))
               : WeatherIconsSVG.missingData,
           size: 28,
         ),
-        CustomText(
-          text: '${hourlyData?.temperature2m[weatherIndex].round() ?? '-'}°',
-          color: accentColor,
-          fontWeight: FontWeight(800),
-        ),
+        Text(tempText, style: textStyle),
       ],
     );
   }

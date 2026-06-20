@@ -43,7 +43,10 @@ class CurrentWeatherData extends StatelessWidget {
               offset: Offset(20, 50),
               child: WeatherIcon(
                 icon: currentForecast != null
-                    ? getWeatherIcon(currentForecast!.weatherCode)
+                    ? getWeatherIcon(
+                        currentForecast!.weatherCode,
+                        Theme.of(context).brightness == Brightness.dark,
+                      )
                     : WeatherIconsSVG.missingData,
                 size: 60,
               ),

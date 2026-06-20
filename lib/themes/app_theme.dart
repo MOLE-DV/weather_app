@@ -11,7 +11,7 @@ class AppTheme {
       style: ButtonStyle(
         elevation: WidgetStateProperty.all(0),
         padding: WidgetStateProperty.all(
-          EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         ),
         backgroundColor: WidgetStateColor.resolveWith((states) {
           if (states.contains(WidgetState.hovered)) {

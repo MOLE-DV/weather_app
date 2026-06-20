@@ -19,9 +19,8 @@ class WeekForecastCard extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    MonthAndWeekNames monthAndWeekNames = MonthAndWeekNames();
     String formatedDate =
-        "${date.day.toString()} ${monthAndWeekNames.getMonthName(date.month - 1, SupportedLanguage.pl)}";
+        "${date.day.toString()} ${getMonthName(date.month - 1, SupportedLanguage.pl)}";
 
     DateTime now = DateTime.now();
 
@@ -47,7 +46,7 @@ class WeekForecastCard extends StatelessWidget {
           "${weather.substring(0, clampDouble(screenWidth / 3 / (weather.length * 0.5), 0, weather.length - 1).toInt())}...";
     }
 
-    String weekName = monthAndWeekNames.getWeekName(
+    String weekName = getWeekName(
       date.weekday - 1,
       SupportedLanguage.pl,
     );
@@ -60,21 +59,14 @@ class WeekForecastCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 5,
           children: [
-            CustomText(
-              text: date.day == now.day
+            Text(
+              date.day == now.day
                   ? "Dziś"
                   : weekName.substring(0, 1).toUpperCase() +
                         weekName.substring(1),
-              fontWeight: FontWeight(500),
-              color: Colors.black,
-              fontSize: 10,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
-            CustomText(
-              text: formatedDate,
-              fontWeight: FontWeight(300),
-              color: Colors.black,
-              fontSize: 9,
-            ),
+            Text(formatedDate, style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
 
@@ -84,15 +76,13 @@ class WeekForecastCard extends StatelessWidget {
           children: [
             WeatherIcon(
               icon: weatherCode != null
-                  ? getWeatherIcon(weatherCode)
+                  ? getWeatherIcon(weatherCode, false)
                   : WeatherIconsSVG.missingData,
               size: 15,
             ),
-            CustomText(
-              text: weather.length > 10 ? formatedWeatherString : weather,
-              color: Colors.black,
-              fontWeight: FontWeight(300),
-              fontSize: 10,
+            Text(
+              weather.length > 10 ? formatedWeatherString : weather,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),

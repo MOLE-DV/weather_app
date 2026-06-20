@@ -11,7 +11,7 @@ class GradientTheme extends ThemeExtension<GradientTheme> {
   }
 
   @override
-  GradientTheme lerp(GradientTheme? other, double t) {
+  GradientTheme lerp(covariant GradientTheme? other, double t) {
     if (other is! GradientTheme) {
       return this;
     }

@@ -79,7 +79,7 @@ class AirQuality extends StatelessWidget {
               ),
               child: SizedBox(height: 12, width: 12),
             ),
-            CustomText(text: airQualityName, color: Colors.black, fontSize: 10),
+            Text(airQualityName, style: Theme.of(context).textTheme.bodyMedium),
           ],
         ),
         SleekCircularSlider(
@@ -97,6 +97,7 @@ class AirQuality extends StatelessWidget {
               modifier: (_) {
                 return '${currentAirQuality?.europeanAqi ?? '-'}';
               },
+              mainLabelStyle: Theme.of(context).textTheme.labelLarge,
             ),
             customWidths: CustomSliderWidths(
               trackWidth: 5,

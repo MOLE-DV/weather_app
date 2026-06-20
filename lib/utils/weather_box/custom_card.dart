@@ -5,7 +5,6 @@ class CustomCard extends StatelessWidget {
   final String topPanelText;
   final bool showSeeMoreButton;
   Widget child;
-  double? topPanelTextSize;
   Widget? panelRightWidget;
 
   CustomCard({
@@ -13,7 +12,6 @@ class CustomCard extends StatelessWidget {
     required this.topPanelText,
     required this.showSeeMoreButton,
     required this.child,
-    this.topPanelTextSize = 12,
     this.panelRightWidget,
   });
 
@@ -34,7 +32,6 @@ class CustomCard extends StatelessWidget {
                 ? CustomCardTopPanel(
                     topPanelText: topPanelText,
                     showSeeMoreButton: showSeeMoreButton,
-                    topPanelTextSize: topPanelTextSize,
                     panelRightWidget: panelRightWidget,
                   )
                 : SizedBox.shrink(),
