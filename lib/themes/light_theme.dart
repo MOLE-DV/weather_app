@@ -22,6 +22,7 @@ ThemeData lightTheme = AppTheme.base.copyWith(
     ),
   ),
   textTheme: TextTheme(
+    headlineLarge: GoogleFonts.inter(color: Colors.black, fontSize: 20),
     bodyLarge: GoogleFonts.inter(
       color: Colors.black,
       fontSize: 12,
@@ -53,7 +54,7 @@ ThemeData lightTheme = AppTheme.base.copyWith(
       color: Colors.black,
     ),
   ),
-
+  progressIndicatorTheme: ProgressIndicatorThemeData(color: Colors.white),
   extensions: <ThemeExtension<dynamic>>[
     GradientTheme(colors: [Colors.blue, Colors.blueAccent]),
     DayCycleSliderColors(

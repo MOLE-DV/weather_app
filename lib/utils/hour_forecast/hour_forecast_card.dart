@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/api/weather_api.dart';
 import 'package:weather_app/icons/weather_icon.dart';
 import 'package:weather_app/icons/weather_icons_SVG.dart';
-import 'package:weather_app/utils/custom_text.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/resources/global_resource.dart';
 import 'package:weather_app/utils/month_and_week_names.dart';
-import 'package:weather_app/utils/translations.dart';
+import 'package:weather_app/utils/translations/translation.dart';
 
 class HourForecastCard extends StatelessWidget {
   final DateTime date;
@@ -20,6 +20,9 @@ class HourForecastCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Translation translation = GlobalResource.of(
+      context,
+    ).appTranslation.translations;
     var now = DateTime.now();
     bool isCurrenHour = now.hour == date.hour;
 
@@ -31,7 +34,7 @@ class HourForecastCard extends StatelessWidget {
     int weatherCode = hourlyData?.weatherCode[weatherIndex] ?? 0;
 
     String hourText = isCurrenHour
-        ? "Teraz"
+        ? translation.now
         : "${(date.hour) < 10 ? "0" : ""}${(date.hour).toString()}:00";
 
     String tempText =
@@ -41,8 +44,6 @@ class HourForecastCard extends StatelessWidget {
         ? Theme.of(context).textTheme.labelMedium
         : Theme.of(context).textTheme.bodyMedium;
 
-    print(date.weekday);
-
     return Column(
       spacing: 10,
       children: [
@@ -51,7 +52,7 @@ class HourForecastCard extends StatelessWidget {
             Text(hourText, style: textStyle, textAlign: TextAlign.center),
             Text(
               now.day != date.day
-                  ? getWeekName(date.weekday - 1, SupportedLanguage.pl)
+                  ? getWeekName(date.weekday - 1, SupportedLanguage.pl, context)
                   : '',
               style: Theme.of(context).textTheme.bodySmall,
               textAlign: TextAlign.center,

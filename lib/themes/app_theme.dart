@@ -7,6 +7,13 @@ class AppTheme {
   AppTheme._();
 
   static ThemeData base = ThemeData(
+    appBarTheme: AppBarTheme(
+      elevation: 0.0,
+      centerTitle: true,
+      actionsPadding: EdgeInsets.only(right: 10),
+      backgroundColor: Color.fromARGB(0, 0, 0, 0),
+      iconTheme: IconThemeData(color: Colors.white),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         elevation: WidgetStateProperty.all(0),

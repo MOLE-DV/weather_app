@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/api/geo_api.dart';
 import 'package:weather_app/utils/custom_dropdown/custom_dropdown_item.dart';
+import 'package:weather_app/utils/translations/translation.dart';
 
 class CustomDropdown extends StatelessWidget {
   final TextEditingController controller;
@@ -13,6 +14,7 @@ class CustomDropdown extends StatelessWidget {
   final double? height;
   final InputDecoration? inputDecoration;
   final ButtonStyle? resultButtonStyle;
+  final Translation translation;
 
   const CustomDropdown({
     super.key,
@@ -25,6 +27,7 @@ class CustomDropdown extends StatelessWidget {
     this.height,
     this.inputDecoration,
     this.resultButtonStyle,
+    required this.translation,
   });
 
   @override
@@ -61,7 +64,7 @@ class CustomDropdown extends StatelessWidget {
                           size: 20,
                           color: Colors.white,
                         ),
-                        hintText: "np. Warsaw, PL",
+                        hintText: '${translation.ex} Warsaw, PL',
                       ),
                     ),
                   ),

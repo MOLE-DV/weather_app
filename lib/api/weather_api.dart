@@ -1,9 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:weather_app/hive/temperature_unit_adapter.dart';
+import 'package:weather_app/hive/wind_speed_unit_adapter.dart';
 import 'package:weather_app/icons/weather_icons_SVG.dart';
+import 'package:weather_app/resources/global_resource.dart';
 import 'dart:convert';
 
-import 'package:weather_app/utils/translations.dart';
+import 'package:weather_app/utils/translations/translation.dart';
 
 var exampleResponse = {
   "latitude": 51.72,
@@ -595,10 +599,15 @@ var exampleResponse = {
 };
 
 class WeatherApi {
-  Future<WeatherResponse?> getWeather(double latitude, double longitude) async {
+  Future<WeatherResponse?> getWeather(
+    double latitude,
+    double longitude,
+    TemperatureUnit temperatureUnit,
+    WindSpeedUnit windSpeedUnit,
+  ) async {
     final response = await http.get(
       Uri.parse(
-        "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,surface_pressure,wind_speed_10m&timezone=auto",
+        "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,surface_pressure,wind_speed_10m&timezone=auto&temperature_unit=${temperatureUnit.name}&wind_speed_unit=${windSpeedUnit.name}",
       ),
     );
 
@@ -843,8 +852,10 @@ class Daily {
   }
 }
 
-String decodeWeatherCode(int weatherCode, SupportedLanguage lang) {
-  return translations[lang]!['weather'][weatherCode];
+String decodeWeatherCode(int weatherCode, BuildContext context) {
+  return GlobalResource.of(
+    context,
+  ).appTranslation.translations.weather.values[weatherCode]!;
 }
 
 bool isNight(DateTime now, Daily? dailyData) {

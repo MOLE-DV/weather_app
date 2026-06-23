@@ -5,9 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:weather_app/api/weather_api.dart';
 import 'package:weather_app/icons/weather_icon.dart';
 import 'package:weather_app/icons/weather_icons_SVG.dart';
+import 'package:weather_app/resources/global_resource.dart';
 import 'package:weather_app/utils/custom_text.dart';
 import 'package:weather_app/utils/month_and_week_names.dart';
-import 'package:weather_app/utils/translations.dart';
+import 'package:weather_app/utils/translations/translation.dart';
 
 class WeekForecastCard extends StatelessWidget {
   final DateTime date;
@@ -17,10 +18,15 @@ class WeekForecastCard extends StatelessWidget {
     required this.date,
     required this.dailyForecast,
   });
+
   @override
   Widget build(BuildContext context) {
+    Translation translation = GlobalResource.of(
+      context,
+    ).appTranslation.translations;
+
     String formatedDate =
-        "${date.day.toString()} ${getMonthName(date.month - 1, SupportedLanguage.pl)}";
+        "${date.day.toString()} ${getMonthName(date.month - 1, SupportedLanguage.pl, context)}";
 
     DateTime now = DateTime.now();
 
@@ -37,10 +43,11 @@ class WeekForecastCard extends StatelessWidget {
         .round();
 
     String weather = dailyForecast != null
-        ? translations[SupportedLanguage.pl]!['weather'][weatherCode]
+        ? translation.weather.values[weatherCode] ?? '-'
         : '-';
 
     String formatedWeatherString = weather;
+
     if (screenWidth <= weatherTextShrinkWidth) {
       formatedWeatherString =
           "${weather.substring(0, clampDouble(screenWidth / 3 / (weather.length * 0.5), 0, weather.length - 1).toInt())}...";
@@ -49,6 +56,7 @@ class WeekForecastCard extends StatelessWidget {
     String weekName = getWeekName(
       date.weekday - 1,
       SupportedLanguage.pl,
+      context,
     );
 
     return Row(
@@ -61,7 +69,7 @@ class WeekForecastCard extends StatelessWidget {
           children: [
             Text(
               date.day == now.day
-                  ? "Dziś"
+                  ? translation.today
                   : weekName.substring(0, 1).toUpperCase() +
                         weekName.substring(1),
               style: Theme.of(context).textTheme.bodyMedium,

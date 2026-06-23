@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/api/geo_api.dart';
 import 'package:weather_app/pages/location_pick_page.dart';
+import 'package:weather_app/resources/global_resource.dart';
 import 'package:weather_app/utils/custom_text.dart';
-import 'package:weather_app/utils/translations.dart';
+import 'package:weather_app/utils/translations/app_translation.dart';
+import 'package:weather_app/utils/translations/translation.dart';
 
 class AppBarLocationIndicator extends StatelessWidget {
   final GeoResult? placeData;
@@ -16,6 +18,10 @@ class AppBarLocationIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Translation translation = GlobalResource.of(
+      context,
+    ).appTranslation.translations;
+
     void closePopupAndChangeLocation(GeoResult result) {
       changeLocation(result);
       Navigator.pop(context);
@@ -62,9 +68,7 @@ class AppBarLocationIndicator extends StatelessWidget {
             children: [
               Icon(Icons.location_pin, size: 18),
               CustomText(
-                text:
-                    placeData?.name ??
-                    translations[SupportedLanguage.pl]!['select_location'],
+                text: placeData?.name ?? translation.selectLocation,
                 fontSize: 20,
               ),
               Icon(Icons.arrow_drop_down, size: 25),

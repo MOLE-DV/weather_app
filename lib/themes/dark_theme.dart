@@ -17,6 +17,7 @@ ThemeData darkTheme = AppTheme.base.copyWith(
     ),
   ),
   textTheme: TextTheme(
+    headlineLarge: GoogleFonts.inter(color: Colors.white, fontSize: 20),
     bodyLarge: GoogleFonts.inter(
       color: Colors.white,
       fontSize: 12,
@@ -48,6 +49,8 @@ ThemeData darkTheme = AppTheme.base.copyWith(
       color: Colors.white,
     ),
   ),
+  iconTheme: IconThemeData(color: Colors.white),
+  progressIndicatorTheme: ProgressIndicatorThemeData(color: Colors.white),
   extensions: <ThemeExtension>[
     GradientTheme(
       colors: <Color>[Colors.indigoAccent.shade700, Colors.indigo.shade700],

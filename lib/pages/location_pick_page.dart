@@ -4,11 +4,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/api/geo_api.dart';
+import 'package:weather_app/resources/global_resource.dart';
 import 'package:weather_app/themes/extenstions/gradient_theme.dart';
-import 'package:weather_app/themes/light_theme.dart';
 import 'package:weather_app/utils/custom_button.dart';
 import 'package:weather_app/utils/custom_dropdown/custom_dropdown.dart';
-import 'package:weather_app/utils/custom_text.dart';
+import 'package:weather_app/utils/translations/translation.dart';
 
 class LocationPickPage extends StatefulWidget {
   final Function changeLocation;
@@ -55,6 +55,10 @@ class _LocationPickPageState extends State<LocationPickPage> {
 
   @override
   Widget build(BuildContext context) {
+    Translation translation = GlobalResource.of(
+      context,
+    ).appTranslation.translations;
+
     return Scaffold(
       body: DecoratedBox(
         decoration: BoxDecoration(
@@ -75,12 +79,12 @@ class _LocationPickPageState extends State<LocationPickPage> {
               children: [
                 // top text
                 AutoSizeText(
-                  "Podaj swoją Lokalizacje",
+                  translation.enterYourLocation,
                   maxLines: 1,
                   style: GoogleFonts.inter(color: Colors.white, fontSize: 35),
                 ),
                 AutoSizeText(
-                  "Wpisz miasto i kod kraju po przecinku",
+                  translation.enterYourLocationDescription,
                   maxLines: 2,
                   style: GoogleFonts.inter(
                     color: Colors.grey.shade100,
@@ -100,6 +104,7 @@ class _LocationPickPageState extends State<LocationPickPage> {
                         results: locationsData?.results,
                         controller: controller,
                         onSelected: widget.changeLocation,
+                        translation: translation,
                       ),
 
                       // Search button
@@ -111,7 +116,7 @@ class _LocationPickPageState extends State<LocationPickPage> {
                               onPressed: getLocations,
                               icon: Icon(Icons.search, color: Colors.white),
                               child: Text(
-                                "Wyszukaj",
+                                translation.search,
                                 style: GoogleFonts.inter(
                                   color: Colors.white,
                                   fontSize: 15,
@@ -125,7 +130,7 @@ class _LocationPickPageState extends State<LocationPickPage> {
                                 onPressed: () => Navigator.pop(context),
                                 icon: Icon(Icons.close, color: Colors.white),
                                 child: Text(
-                                  "Zamknij",
+                                  translation.close,
                                   style: GoogleFonts.inter(
                                     color: Colors.white,
                                     fontSize: 15,

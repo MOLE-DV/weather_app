@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/api/air_quality_api.dart';
 import 'package:weather_app/api/geo_api.dart';
 import 'package:weather_app/api/weather_api.dart';
+import 'package:weather_app/hive/app_settings_adapter.dart';
 import 'package:weather_app/icons/weather_icon.dart';
 import 'package:weather_app/icons/weather_icons_SVG.dart';
+import 'package:weather_app/pages/settings_page.dart';
+import 'package:weather_app/resources/global_resource.dart';
 import 'package:weather_app/utils/air_quality.dart';
 import 'package:weather_app/utils/appbar_location_indicator.dart';
 import 'package:weather_app/utils/current_weather_data.dart';
 import 'package:weather_app/utils/custom_background.dart';
 import 'package:weather_app/utils/hour_forecast/hour_forecast.dart';
 import 'package:weather_app/utils/sunset_and_sunrise_time.dart';
+import 'package:weather_app/utils/translations/translation.dart';
 import 'package:weather_app/utils/weather_box/custom_card.dart';
 import 'package:weather_app/utils/week_forecast/week_forecast.dart';
 
@@ -33,6 +37,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GlobalResource globalResource = GlobalResource.of(context);
+    Translation translation = globalResource.appTranslation.translations;
+
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -41,14 +48,19 @@ class HomePage extends StatelessWidget {
 
       // weather app bar
       appBar: AppBar(
-        elevation: 0.0,
-        centerTitle: true,
-        backgroundColor: Color.fromARGB(0, 0, 0, 0),
-        iconTheme: IconThemeData(color: Colors.white),
         title: AppBarLocationIndicator(
           placeData: placeData,
           changeLocation: changeLocation,
         ),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SettingsPage()),
+            ),
+            icon: Icon(Icons.settings, size: 25),
+          ),
+        ],
       ),
 
       // body
@@ -69,7 +81,7 @@ class HomePage extends StatelessWidget {
                     dailyUnits: weatherData?.dailyUnits,
                   ),
                   CustomCard(
-                    topPanelText: "Prognoza godzinowa",
+                    topPanelText: translation.hourForecastLabel,
                     showSeeMoreButton: true,
                     child: HourForecast(
                       hourlyData: weatherData?.hourly,
@@ -77,7 +89,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   CustomCard(
-                    topPanelText: "Prognoza 7-dniowa",
+                    topPanelText: translation.sevenDayForecastLabel,
                     showSeeMoreButton: true,
                     child: WeekForecast(dailyForecast: weatherData?.daily),
                   ),
@@ -101,7 +113,7 @@ class HomePage extends StatelessWidget {
                           SizedBox(
                             width: maxWidth,
                             child: CustomCard(
-                              topPanelText: "Wschód i zachód słońca",
+                              topPanelText: translation.sunriseAndSunsetLabel,
                               showSeeMoreButton: false,
                               panelRightWidget: Transform.scale(
                                 scale: 2.5,
@@ -123,7 +135,7 @@ class HomePage extends StatelessWidget {
                           SizedBox(
                             width: maxWidth,
                             child: CustomCard(
-                              topPanelText: "Jakość powietrza",
+                              topPanelText: translation.airQualityLabel,
                               showSeeMoreButton: false,
                               child: AirQuality(
                                 currentAirQuality: airQualityData?.current,
